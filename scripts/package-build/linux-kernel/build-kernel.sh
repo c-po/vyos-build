@@ -37,13 +37,14 @@ ARCH=$(dpkg --print-architecture)
 # The first entry is the base defconfig; subsequent entries are merged on top.
 KCONFIG_MERGE_FRAGMENTS=()
 if [ "${ARCH}" = "arm64" ]; then
-    KCONFIG_MERGE_FRAGMENTS+=("${CWD}/config/arm64/vyos_defconfig")
+    ARCH_CONFIG_DIR="${CWD}/config/arm64"
 elif [ "${ARCH}" = "amd64" ]; then
-    KCONFIG_MERGE_FRAGMENTS+=("${CWD}/config/x86/vyos_defconfig")
+    ARCH_CONFIG_DIR="${CWD}/config/x86"
 else
     echo "E: unsupported architecture"
     exit 1
 fi
+KCONFIG_MERGE_FRAGMENTS+=("${ARCH_CONFIG_DIR}/vyos_defconfig")
 # NOTE: do NOT export KCONFIG_CONFIG here. KCONFIG_CONFIG is interpreted by
 # kbuild as the path to the OUTPUT .config file. Exporting it globally would
 # cause `make vyos_defconfig` (and the rest of the kernel build) to write the
@@ -88,6 +89,15 @@ echo "I: Merge Kernel config snippets"
 for fragment in "${CWD}"/config/*.config; do
     [ -f "${fragment}" ] || continue
     echo "I: adding configuration snippet ${fragment}"
+    KCONFIG_MERGE_FRAGMENTS+=("${fragment}")
+done
+# Architecture-specific snippets are merged AFTER the arch-neutral ones so they
+# can override them - e.g. enabling a subsystem that only exists, or is only
+# wanted, on one architecture. "vyos_defconfig" has no .config suffix and is
+# therefore not matched twice by this glob.
+for fragment in "${ARCH_CONFIG_DIR}"/*.config; do
+    [ -f "${fragment}" ] || continue
+    echo "I: adding ${ARCH} configuration snippet ${fragment}"
     KCONFIG_MERGE_FRAGMENTS+=("${fragment}")
 done
 if [ -n "${TRUSTED_KEYS_FRAGMENT_TMP}" ]; then

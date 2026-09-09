@@ -4753,3 +4753,4 @@ CONFIG_UNWINDER_ORC=y
 CONFIG_ARCH_HAS_KCOV=y
 CONFIG_ARCH_USE_MEMTEST=y
 # end of Kernel Testing and Coverage
+# CONFIG_NET_DSA is not set
