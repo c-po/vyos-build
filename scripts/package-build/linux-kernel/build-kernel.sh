@@ -62,7 +62,15 @@ PATCH_DIR=${CWD}/patches/kernel
 for patch in $(ls ${PATCH_DIR})
 do
     echo "I: Apply Kernel patch: ${PATCH_DIR}/${patch}"
-    patch -p1 < ${PATCH_DIR}/${patch}
+    if grep -q '^GIT binary patch' "${PATCH_DIR}/${patch}"; then
+        # GNU patch refuses "GIT binary patch" hunks outright; git apply
+        # understands them natively. --no-index applies straight to the
+        # working tree without requiring (or touching) a .git repo, since
+        # this kernel source tree isn't one.
+        git apply --no-index -p1 "${PATCH_DIR}/${patch}"
+    else
+        patch -p1 < ${PATCH_DIR}/${patch}
+    fi
 done
 
 # Change name of Signing Cert
@@ -141,7 +149,12 @@ EOF
 
 echo "I: Build Debian Kernel package"
 touch .scmversion
-make bindeb-pkg BUILD_TOOLS=1 LOCALVERSION=${KERNEL_SUFFIX} KDEB_PKGVERSION=${KERNEL_VERSION}-1 -j $(getconf _NPROCESSORS_ONLN)
+
+# scripts/package/builddeb references $board unconditionally (added by the
+# BPI board-support patches) and runs under "set -u", so it must be exported
+# even for this generic, non-board-specific kernel build. Empty falls through
+# to builddeb's default "*)" case, matching pre-BPI-patch packaging behavior.
+board="" make bindeb-pkg BUILD_TOOLS=1 LOCALVERSION=${KERNEL_SUFFIX} KDEB_PKGVERSION=${KERNEL_VERSION}-1 -j $(getconf _NPROCESSORS_ONLN)
 
 # Back to the old Kernel build-scripts directory
 cd $CWD
