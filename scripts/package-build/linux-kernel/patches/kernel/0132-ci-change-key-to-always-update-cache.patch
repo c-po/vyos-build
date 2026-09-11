@@ -1,0 +1,25 @@
+From 38a945eb55be445b76280c146554bb44fb186eb8 Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Fri, 17 Apr 2026 22:28:34 +0200
+Subject: [PATCH 132/134] ci: change key to always update cache
+
+---
+ .github/workflows/build.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+index 18e198cb7ef6..c1ca3c974d73 100644
+--- a/.github/workflows/build.yml
++++ b/.github/workflows/build.yml
+@@ -74,7 +74,7 @@ jobs:
+         uses: actions/cache@v4
+         with:
+           path: ~/.cache/ccache/
+-          key: ${{ runner.os }}-ccache-${{ github.ref_name }}
++          key: ${{ runner.os }}-ccache-${{ github.ref_name }}-${{ github.run_id }}
+           restore-keys: |
+             ${{ runner.os }}-ccache-${{ github.ref_name }}
+ 
+-- 
+2.47.3
+

@@ -1,0 +1,25 @@
+From 6a81c49e7fc55821733dec07bc0eecaa273ae673 Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sat, 18 Apr 2026 12:05:55 +0200
+Subject: [PATCH 127/134] build.sh: change ccache from arch to board
+
+---
+ build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build.sh b/build.sh
+index fa8e10616da7..16b3f5e7a1a4 100755
+--- a/build.sh
++++ b/build.sh
+@@ -115,7 +115,7 @@ if [[ ! $hostarch =~ aarch64|armv ]];then
+ 	fi
+ 
+ 	crosscompile=1
+-	export CCACHE_DIR="$HOME/.cache/ccache/${ARCH}"
++	export CCACHE_DIR="$HOME/.cache/ccache/${board}"
+ 	mkdir -p "${CCACHE_DIR}"
+ fi;
+ 
+-- 
+2.47.3
+

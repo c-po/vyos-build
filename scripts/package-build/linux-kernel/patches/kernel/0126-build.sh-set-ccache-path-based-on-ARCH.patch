@@ -1,0 +1,25 @@
+From 95a814da26bd05d35fecb67a087846cd44754e71 Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Fri, 17 Apr 2026 12:29:36 +0200
+Subject: [PATCH 126/134] build.sh: set ccache path based on ARCH
+
+---
+ build.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/build.sh b/build.sh
+index fbf60c60247f..fa8e10616da7 100755
+--- a/build.sh
++++ b/build.sh
+@@ -115,6 +115,8 @@ if [[ ! $hostarch =~ aarch64|armv ]];then
+ 	fi
+ 
+ 	crosscompile=1
++	export CCACHE_DIR="$HOME/.cache/ccache/${ARCH}"
++	mkdir -p "${CCACHE_DIR}"
+ fi;
+ 
+ #if [[ "$builddir" != "" && ! "$1" =~ ^(updatesrc|uenv|defconfig|dts.?|[u]?mount)$ ]];
+-- 
+2.47.3
+

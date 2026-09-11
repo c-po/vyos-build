@@ -1,0 +1,25 @@
+From 13b22e40a0b20e41e4843ac7777ce9dff23d38bc Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sun, 30 Nov 2025 14:27:15 +0100
+Subject: [PATCH 007/134] kbuild: deb-pkg: add bpi router variants
+
+---
+ scripts/package/builddeb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 11429129e044..13fd48d42818 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -82,7 +82,7 @@ install_linux_image () {
+ 			mkdir -p ${pdir}/boot/extlinux/
+ 			cp arch/arm64/boot/Image.gz "${pdir}/boot/extlinux/Image-${KERNELRELEASE}.gz"
+ 			;;
+-		bpi-r3|bpi-r4)
++		bpi-r3|bpi-r3mini|bpi-r4|bpi-r4pro|bpi-r4lite)
+ 			#R3/R4 only use FIT and no standalone kernel/dtbs
+ 			;;
+ 		*)
+-- 
+2.47.3
+

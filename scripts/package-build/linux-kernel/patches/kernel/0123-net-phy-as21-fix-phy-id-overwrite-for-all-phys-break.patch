@@ -1,0 +1,31 @@
+From 4af7689a71cf019c3a6542dac10ca0fc9cdc4225 Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Thu, 12 Feb 2026 12:32:00 +0100
+Subject: [PATCH 123/134] net: phy: as21: fix phy-id overwrite for all phys
+ (breaking leds on mt7988 internal 1G phy)
+
+---
+ drivers/net/phy/as21xxx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/as21xxx.c b/drivers/net/phy/as21xxx.c
+index 87c92cc19281..0219451e1e61 100644
+--- a/drivers/net/phy/as21xxx.c
++++ b/drivers/net/phy/as21xxx.c
+@@ -1236,10 +1236,11 @@ static int as21xxx_config_led(struct phy_device *phydev)
+ static int as21xxx_match_phy_device(struct phy_device *phydev,
+ 				    const struct phy_driver *phydrv)
+ {
++	u32 phy_id = aeon_read_pid(phydev);
+ 	/* AEONSEMI get pid. */
+-	phydev->phy_id = aeon_read_pid(phydev);
+-	if (phydev->phy_id != PHY_ID_AS21XXX)
++	if (phy_id != PHY_ID_AS21XXX)
+ 		return 0;
++	phydev->phy_id = phy_id;
+ 	aeon_mdio_write(phydev, 0x1E, 0x142, 0x48);
+ 	return 1;
+ }
+-- 
+2.47.3
+

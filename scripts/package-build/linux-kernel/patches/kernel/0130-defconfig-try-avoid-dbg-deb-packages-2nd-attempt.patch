@@ -1,0 +1,39 @@
+From 05f37b9e1792b52aae89816c8f3c7166c608aafe Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sat, 18 Apr 2026 17:26:46 +0200
+Subject: [PATCH 130/134] defconfig: try avoid dbg deb packages - 2nd attempt
+
+---
+ arch/arm64/configs/mt7986a_bpi-r3_defconfig | 2 +-
+ arch/arm64/configs/mt7988a_bpi-r4_defconfig | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/configs/mt7986a_bpi-r3_defconfig b/arch/arm64/configs/mt7986a_bpi-r3_defconfig
+index a06098557d0b..d71464e6306f 100644
+--- a/arch/arm64/configs/mt7986a_bpi-r3_defconfig
++++ b/arch/arm64/configs/mt7986a_bpi-r3_defconfig
+@@ -105,7 +105,7 @@ CONFIG_CRYPTO_SKCIPHER=y
+ CONFIG_CRYPTO_SKCIPHER2=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_FS_ALLOW_ALL=y
+-CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
++#CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+ #CONFIG_DEBUG_KERNEL=y
+ CONFIG_DEFAULT_CUBIC=y
+ CONFIG_DEFAULT_DEADLINE=y
+diff --git a/arch/arm64/configs/mt7988a_bpi-r4_defconfig b/arch/arm64/configs/mt7988a_bpi-r4_defconfig
+index 9f62fdfac408..813651701fdc 100644
+--- a/arch/arm64/configs/mt7988a_bpi-r4_defconfig
++++ b/arch/arm64/configs/mt7988a_bpi-r4_defconfig
+@@ -105,7 +105,7 @@ CONFIG_CRYPTO_SKCIPHER=y
+ CONFIG_CRYPTO_SKCIPHER2=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_FS_ALLOW_ALL=y
+-CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
++#CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+ #CONFIG_DEBUG_KERNEL=y
+ CONFIG_DEFAULT_CUBIC=y
+ CONFIG_DEFAULT_DEADLINE=y
+-- 
+2.47.3
+

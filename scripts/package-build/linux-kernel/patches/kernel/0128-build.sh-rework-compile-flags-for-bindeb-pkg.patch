@@ -1,0 +1,61 @@
+From 3009f0a70d94ee7aff94fa8497c4d180b81a074f Mon Sep 17 00:00:00 2001
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sat, 18 Apr 2026 17:01:33 +0200
+Subject: [PATCH 128/134] build.sh: rework compile flags for bindeb-pkg
+
+---
+ build.sh | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/build.sh b/build.sh
+index 16b3f5e7a1a4..4b8f19fbe1d2 100755
+--- a/build.sh
++++ b/build.sh
+@@ -108,15 +108,19 @@ hostarch=$(uname -m) #r64:aarch64 r2: armv7l
+ if [[ ! $hostarch =~ aarch64|armv ]];then
+ 	if [[ "$ARCH" == "arm64" ]]; then
+ 		if [[ -z "$(which aarch64-linux-gnu-gcc)" ]];then echo "please install gcc-aarch64-linux-gnu";exit 1;fi
+-		export CROSS_COMPILE='ccache aarch64-linux-gnu-'
++		export CROSS_COMPILE='aarch64-linux-gnu-'
+ 	elif [[ "$ARCH" == "arm" ]]; then
+ 		if [[ -z "$(which arm-linux-gnueabihf-gcc)" ]];then echo "please install gcc-arm-linux-gnueabihf";exit 1;fi
+-		export CROSS_COMPILE='ccache arm-linux-gnueabihf-'
++		export CROSS_COMPILE='arm-linux-gnueabihf-'
+ 	fi
+ 
+ 	crosscompile=1
++	export PATH="/usr/lib/ccache:$PATH"
+ 	export CCACHE_DIR="$HOME/.cache/ccache/${board}"
+ 	mkdir -p "${CCACHE_DIR}"
++
++	export CC="ccache aarch64-linux-gnu-gcc"
++	export HOSTCC="ccache gcc"
+ fi;
+ 
+ #if [[ "$builddir" != "" && ! "$1" =~ ^(updatesrc|uenv|defconfig|dts.?|[u]?mount)$ ]];
+@@ -350,9 +354,20 @@ function pack {
+ 
+ function pack_debs {
+ 	get_version
+-	echo "pack linux-headers, linux-image, linux-libc-dev debs..."
++	echo "pack linux-headers, linux-image debs..."
++
++	export CCACHE_DIR="$HOME/.cache/ccache/${board}"
++	mkdir -p "${CCACHE_DIR}"
++
++	export CC="ccache ${CROSS_COMPILE}gcc"
++	export CXX="ccache ${CROSS_COMPILE}g++"
++
++	export LOCALVERSION="${gitbranch}"
++	export KDEB_COMPRESS=gzip
++	export DEB_BUILD_OPTIONS="nocheck noautodbgsym"
++
+ 	echo "LOCALVERSION=${gitbranch} board=$baseboard ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE"
+-	LOCALVERSION="${gitbranch}" board="$baseboard" KDEB_COMPRESS=gzip make -j${numproc} bindeb-pkg
++	board="$baseboard" make -j${numproc} bindeb-pkg
+ 	if [[ $? -ne 0 ]];then exit 1;fi;
+ 	ls ../*.deb
+ }
+-- 
+2.47.3
+

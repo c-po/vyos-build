@@ -1,0 +1,54 @@
+From 719d318c6b71445dfbebce6821499de891d6800f Mon Sep 17 00:00:00 2001
+From: Daniel Golle <daniel@makrotopia.org>
+Date: Fri, 17 Apr 2026 16:58:45 +0200
+Subject: [PATCH 125/134] net: mediatek: fix mt7622 shared_sgmii issue
+
+before this patch sgmiipcs is attached to both mac and
+causing hang when bring-up the interface.
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 16 +++++++++++++---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  1 +
+ 2 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index ac25c50418a5..0f1ffa467972 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -5756,9 +5756,19 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
+ 			mac->phylink_config.available_pcs = mac->available_pcs;
+ 			mac->phylink_config.num_available_pcs = count;
+ 		} else {
+-			sid = (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_SGMII)) ?
+-			       0 : id;
+-
++			if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_SGMII)) {
++				/* single LynxI PCS used by either GMAC */
++				if (!test_bit(phy_mode, eth->sgmii_pcs[0]->supported_interfaces))
++					goto no_pcs;
++				if (eth->shared_sgmii_used) {
++					err = -EBUSY;
++					goto free_netdev;
++				}
++				sid = 0;
++				eth->shared_sgmii_used = true;
++			} else {
++				sid = id;
++			}
+ 			mac->phylink_config.available_pcs = &eth->sgmii_pcs[sid];
+ 			mac->phylink_config.num_available_pcs = 1;
+ 		}
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 700b88d38c55..e7a5b3f3692f 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -1480,6 +1480,7 @@ struct mtk_eth {
+ 	struct regmap			*ethsys;
+ 	struct regmap			*infra;
+ 	struct phylink_pcs		*sgmii_pcs[MTK_MAX_DEVS];
++	bool				shared_sgmii_used;
+ 	struct regmap			*pctl;
+ 	bool				hwlro;
+ 	refcount_t			dma_refcnt;
+-- 
+2.47.3
+
