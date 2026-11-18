@@ -1,0 +1,28 @@
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Thu, 17 Sep 2026 23:22:53 +0200
+Subject: [PATCH] clk: mediatek: mt7987: fix pll call
+
+commit
+b7cd043b8412 clk: mediatek: Refactor pll registration to pass device
+changed mtk_clk_register_plls from of-node to device-node
+
+fix this
+
+(cherry picked from commit 58f389fe32c0ff80eaf88035c551a68be786e313)
+---
+ drivers/clk/mediatek/clk-mt7987-apmixed.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt7987-apmixed.c b/drivers/clk/mediatek/clk-mt7987-apmixed.c
+index 2f8d0ed2a6f9d..902a6999b4802 100644
+--- a/drivers/clk/mediatek/clk-mt7987-apmixed.c
++++ b/drivers/clk/mediatek/clk-mt7987-apmixed.c
+@@ -78,7 +78,7 @@ static int clk_mt7987_apmixed_probe(struct platform_device *pdev)
+ 	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(plls));
+ 	if (!clk_data)
+ 		return -ENOMEM;
+-	r = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
++	r = mtk_clk_register_plls(&pdev->dev, plls, ARRAY_SIZE(plls), clk_data);
+ 	if (r)
+ 		goto free_apmixed_data;
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);

@@ -1,0 +1,22 @@
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Fri, 24 Oct 2025 17:10:02 +0200
+Subject: [PATCH] dt-bindings: spi: add compatibles for mt7987
+
+(cherry picked from commit 8b022bb7b962d8524ea9ee4c14f6f13879b7c3a5)
+---
+ Documentation/devicetree/bindings/spi/mediatek,spi-mt65xx.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mt65xx.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mt65xx.yaml
+index 3bf3eb1f87289..402f2beec3c56 100644
+--- a/Documentation/devicetree/bindings/spi/mediatek,spi-mt65xx.yaml
++++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mt65xx.yaml
+@@ -35,6 +35,8 @@ properties:
+           - enum:
+               - mediatek,mt7981-spi-ipm
+               - mediatek,mt7986-spi-ipm
++              - mediatek,mt7987-spi-quad
++              - mediatek,mt7987-spi-single
+               - mediatek,mt7988-spi-quad
+               - mediatek,mt7988-spi-single
+               - mediatek,mt8188-spi-ipm

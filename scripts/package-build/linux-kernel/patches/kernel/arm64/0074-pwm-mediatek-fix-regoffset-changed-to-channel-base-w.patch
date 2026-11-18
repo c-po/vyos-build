@@ -1,0 +1,25 @@
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sat, 11 Oct 2025 13:22:34 +0200
+Subject: [PATCH] pwm: mediatek: fix regoffset changed to channel-base/width
+
+c95ab56a7ad6 pwm: mediatek: Simplify representation of channel offsets
+
+(cherry picked from commit 80d4f6e9ccd0050046ef5fb37ab13f08d2366349)
+---
+ drivers/pwm/pwm-mediatek.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 4df47b6cddbbb..c2935a3f7cbfe 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -489,7 +489,8 @@ static const struct pwm_mediatek_of_data mt7986_pwm_data = {
+ static const struct pwm_mediatek_of_data mt7987_pwm_data = {
+ 	.num_pwms = 3,
+ 	.pwm45_fixup = false,
+-	.reg_offset = mtk_pwm_reg_offset_v3,
++	.chanreg_base = 0x100,
++	.chanreg_width = 0x100,
+ };
+ 
+ static const struct pwm_mediatek_of_data mt7988_pwm_data = {

@@ -1,0 +1,31 @@
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Sun, 9 Nov 2025 23:02:07 +0100
+Subject: [PATCH] net: ethernet: mtk_eth_soc: rss-changes for mt7987
+
+(cherry picked from commit 7f66c85ebf7e16063f2c009cb18e1f5a9ec01ca0)
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 2080092b9d9b9..3d4a84479ecaa 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -6628,7 +6628,7 @@ static const struct mtk_soc_data mt7987_data = {
+ 	.hash_offset = 4,
+ 	.has_accounting = true,
+ 	.foe_entry_size = MTK_FOE_ENTRY_V3_SIZE,
+-	//.rss_num = 4,
++	.rss_num = 4,
+ 	.tx = {
+ 		.desc_size = sizeof(struct mtk_tx_dma_v2),
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+@@ -6638,7 +6638,7 @@ static const struct mtk_soc_data mt7987_data = {
+ 	},
+ 	.rx = {
+ 		.desc_size = sizeof(struct mtk_rx_dma_v2),
+-		.irq_done_mask = MTK_RX_DONE_INT_V2,
++		//.irq_done_mask = MTK_RX_DONE_INT_V2,
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+ 		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+ 		.dma_len_offset = 8,

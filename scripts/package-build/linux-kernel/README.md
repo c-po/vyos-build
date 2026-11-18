@@ -24,7 +24,9 @@ On the other hand we ship additional not mainlined features as WireGuard VPN.
 The Kernel is build from the vanilla repositories hosted at https://git.kernel.org.
 VyOS requires a few additional patches to work which are stored in the
 patches/kernel folder. They are applied *before* the Kernel configuration is
-generated, as a patch may introduce new Kconfig symbols.
+generated, as a patch may introduce new Kconfig symbols. Patches needed by one
+architecture only live in `patches/kernel/<arch>` (`arm64` or `x86`) and are
+applied after the common ones.
 
 ### Config
 

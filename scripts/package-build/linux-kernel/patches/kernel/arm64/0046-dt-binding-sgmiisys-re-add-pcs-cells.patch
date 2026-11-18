@@ -1,0 +1,23 @@
+From: Frank Wunderlich <frank-w@public-files.de>
+Date: Mon, 5 May 2025 19:58:25 +0200
+Subject: [PATCH] dt-binding: sgmiisys: re-add pcs-cells"
+
+(cherry picked from commit 93815ea365a1b5677de12666cf2575ab54c02749)
+---
+ .../devicetree/bindings/net/pcs/mediatek,sgmiisys.yaml         | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/pcs/mediatek,sgmiisys.yaml b/Documentation/devicetree/bindings/net/pcs/mediatek,sgmiisys.yaml
+index ca0f4f4ec7655..375c166727c50 100644
+--- a/Documentation/devicetree/bindings/net/pcs/mediatek,sgmiisys.yaml
++++ b/Documentation/devicetree/bindings/net/pcs/mediatek,sgmiisys.yaml
+@@ -58,6 +58,9 @@ properties:
+           - const: sgmii_tx
+           - const: sgmii_rx
+ 
++      "#pcs-cells":
++        const: 0
++
+       phys:
+         $ref: /schemas/types.yaml#/definitions/phandle
+         description:

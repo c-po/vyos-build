@@ -43,14 +43,16 @@ ARCH=$(dpkg --print-architecture)
 # allows safe handling of paths with spaces and avoids word-splitting issues
 # The first entry is the base defconfig; subsequent entries are merged on top.
 KCONFIG_MERGE_FRAGMENTS=()
+# architecture specific subdirectory for config/ and patches/kernel/
 if [ "${ARCH}" = "arm64" ]; then
-    KCONFIG_MERGE_FRAGMENTS+=("${CWD}/config/arm64/vyos_defconfig")
+    ARCH_DIR=arm64
 elif [ "${ARCH}" = "amd64" ]; then
-    KCONFIG_MERGE_FRAGMENTS+=("${CWD}/config/x86/vyos_defconfig")
+    ARCH_DIR=x86
 else
     echo "E: unsupported architecture"
     exit 1
 fi
+KCONFIG_MERGE_FRAGMENTS+=("${CWD}/config/${ARCH_DIR}/vyos_defconfig")
 # NOTE: do NOT export KCONFIG_CONFIG here. KCONFIG_CONFIG is interpreted by
 # kbuild as the path to the OUTPUT .config file. Exporting it globally would
 # cause `make vyos_defconfig` (and the rest of the kernel build) to write the
@@ -64,11 +66,13 @@ fi
 # Saving time/resources is essential :-)
 # Note that the patches should be applied BEFORE the kernel config is generated
 # because patches may add new options!
+# Common patches go first, then the ones for this architecture only.
 PATCH_DIR=${CWD}/patches/kernel
-for patch in $(ls ${PATCH_DIR})
+for patch in "${PATCH_DIR}"/*.patch "${PATCH_DIR}/${ARCH_DIR}"/*.patch
 do
-    echo "I: Apply Kernel patch: ${PATCH_DIR}/${patch}"
-    patch -p1 < ${PATCH_DIR}/${patch}
+    [ -f "${patch}" ] || continue
+    echo "I: Apply Kernel patch: ${patch}"
+    patch -p1 < "${patch}"
 done
 
 # Change name of Signing Cert
