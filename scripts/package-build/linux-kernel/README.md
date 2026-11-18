@@ -38,6 +38,9 @@ The Kernel configuration is assembled by `build-kernel.sh` using the Kernel's ow
   * arm64 -> [config/arm64/vyos_defconfig](config/arm64/vyos_defconfig)
 * all feature snippets in [config/](config/) (`config/*.config`), merged on top of
   the base in file name order
+* all architecture specific snippets in `config/<arch>/*.config`, e.g. the
+  BananaPi R4 board support in
+  [config/arm64/70-bananapi-r4.config](config/arm64/70-bananapi-r4.config)
 * a temporary snippet enabling module signing, generated at build time when
   `data/certificates/*.pem` are present
 

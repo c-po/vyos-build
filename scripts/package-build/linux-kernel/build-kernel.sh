@@ -96,7 +96,7 @@ fi
 
 echo "I: Merge Kernel config snippets"
 # Collect config fragments into the fragment array
-for fragment in "${CWD}"/config/*.config; do
+for fragment in "${CWD}"/config/*.config "${CWD}/config/${ARCH_DIR}"/*.config; do
     [ -f "${fragment}" ] || continue
     echo "I: adding configuration snippet ${fragment}"
     KCONFIG_MERGE_FRAGMENTS+=("${fragment}")
